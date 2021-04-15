@@ -14,5 +14,10 @@ Class main():
     def main():
         return 0
 
+Class Multimedia():
+    def grabador():
+        return 0
+    def reproductor():
+        return ""
 
 main.main()
