@@ -9,3 +9,8 @@ warnings.filterwarnings('ignore')
 
 
 print("hola")
+
+Class main():
+    def main():
+        return 0
+        
