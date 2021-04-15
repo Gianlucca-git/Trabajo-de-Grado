@@ -13,4 +13,6 @@ print("hola")
 Class main():
     def main():
         return 0
-        
+
+
+main.main()
