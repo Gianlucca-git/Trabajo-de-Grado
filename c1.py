@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 #CARGO EL ARCHIVO.WAV 
 
-Archivo = 'monos_ebrios.wav'
+Archivo = 'grabaciones/monos_ebrios.wav'
 Audio = MonoLoader(filename=Archivo)()
 print("\n\n     EMPIEZA 0  \n\n")
 
@@ -37,7 +37,6 @@ print("Beat estimation confidence:", b_conf)
 #################################################################
 
 ## FUNCION PARA EXTRAER TODOS LOS TIEMPOS Y VALORES DE LAS NOTAS EXISTENTES 
-
 loader = EqloudLoader(filename= Archivo, sampleRate=(48000))
 
 print("\n\nDuracion del audio en total [seg]: {}".format(len(Audio)/44100.0))
