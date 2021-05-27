@@ -1,6 +1,5 @@
 
-import essentia
-
+import essentia as ess
 import IPython.display as ipd
 import numpy
 import numpy as np
@@ -15,7 +14,7 @@ warnings.filterwarnings('ignore')
 #CARGO EL ARCHIVO.WAV 
 
 Archivo = 'grabaciones/monos_ebrios.wav'
-Audio = MonoLoader(filename=Archivo)()
+Audio = ess.MonoLoader(filename=Archivo)()
 print("\n\n     EMPIEZA 0  \n\n")
 
 ##  FUNCION PARA EXTRAER LOS BEATS POR MINUTOS DEL ARCHIVO  
