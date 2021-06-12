@@ -1,8 +1,6 @@
 import wave
 import pyaudio
 import time
-from PyQt5 import QtCore, QtGui, QtWidgets 
-
 
 
 def grabar(bandera,numero_riff):
@@ -89,20 +87,21 @@ def reproductor(bandera_reproductor,archivo):
 
         #LEEMOS INFORMACIÓN  
         data = f.readframes(chunk)  
-
+        print(" QUE MIERDAS ")
         #REPRODUCIMOS "stream"  
-        while bandera_reproductor:  
-            stream.write(data)  
-            data = f.readframes(chunk)  
+        while data:  
+                stream.write(data)  
+                data = f.readframes(chunk)  
 
         #PARAMOS "stream".  
         stream.stop_stream()  
         stream.close()  
 
         #FINALIZAMOS PyAudio  
-        p.terminate()  
+        p.terminate()
+        print(" Termino ")  
 
 
 
 ##grabar(True)
-##reproductor(True, "Riff_1.wav")
+reproductor(True, "Riff_Uno.wav")
