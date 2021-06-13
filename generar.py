@@ -3,6 +3,7 @@ import essentia
 import math
 import IPython.display as ipd
 import numpy
+from tablatura import tab
 import numpy as np
 import matplotlib.pyplot as plt
 from essentia.standard import CartesianToPolar,FrameGenerator,Onsets,FFT,Windowing,OnsetDetection,MonoLoader,RhythmExtractor2013,EqloudLoader,PredominantPitchMelodia
@@ -11,11 +12,17 @@ warnings.filterwarnings('ignore')
 
 
 class process ():
+    
+    escala = [ 82.41 , 87.31, 92.50, 98.00,103.83 , 110.00, 116.54,123.47, 130.81,138.59,
+                146.83, 155.56,164.81, 174.61,185.00 , 196.00, 207.65, 220.00, 233.08, 246.94, 261.63,
+                277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.00, 415.30, 440.00,466.00, 493.88,
+                523.25, 554.37, 587.33, 622.25, 659.26, 698.46, 739.99, 783.99, 830.61, 880.00,
+                932.33, 987.77 ]
 
     def f_audio (riff):
-        #CARGO EL ARCHIVO.WAV 
         Archivo = 'grabaciones/' + riff
         Audio = MonoLoader(filename=Archivo)()
+        print ('CARGO EL ARCHIVO.WAV') 
         return Audio,Archivo
 
     def f_beats_for_minutes(Audio):
@@ -87,13 +94,14 @@ class process ():
         notas_segun_indice= []
         promedio_notas=[]
         i= 0
-
+        u= all_extractor['all_notes'][-1]
+        all_extractor['all_notes'] = numpy.append(all_extractor['all_notes'],[u,u,u,u,u,u,u,u,u,u,u,u])
         #print ("tiempos en segundos en los que ocurren las notas detectadas por libreria")
         #print()
         #print (tiempos_detectados_essentia)
         #print ("\n notas detectadas por libreria ->",len (tiempos_detectados_essentia))
 
-        while (len(tiempos_detectados_essentia)!= i):
+        while ( i < len(tiempos_detectados_essentia) ):
             
             corte= str(tiempos_detectados_essentia[i]) ## definimos para cortar el string 
             indice_tiempos.append(process.trunque (corte[:len(corte)-1], all_extractor['all_times']) )
@@ -152,6 +160,10 @@ class process ():
         fuza= 1/8 
         semi_fuza = 1/16
 
+        print('promedio_notas', len(promedio_notas))
+        print('notas_segun_indice', len(notas_segun_indice))
+        print('t_notas_detectadas', len(t_notas_detectadas))
+
         t_notas_detectadas_depuradas = []
         i,diferencia = 0 , 0  
         indices_que_se_mantienen=[]
@@ -163,7 +175,7 @@ class process ():
 
 
         ###   FUNCION DE DEPURACION  notas·············································································
-        while (len(t_notas_detectadas) > (i + 1)  ):
+        while (len(t_notas_detectadas) > (i+1)  ):
             
             diferencia_tiempos = abs( t_notas_detectadas[i] - t_notas_detectadas[i+1] )
             
@@ -194,36 +206,105 @@ class process ():
                 i+=1 
                 
             i+=1    
+        else: 
+            print (" PUTO VALOR DE i ->" , i )
 
-        else: t_notas_detectadas_depuradas.append(t_notas_detectadas[i])    
+            t_notas_detectadas_depuradas.append(t_notas_detectadas[i-1])    
             
         #print ("Valor de notas segun los indices que quedaron",valor_de_notas_depuradas)
-        return t_notas_detectadas_depuradas,valor_de_notas_depuradas
-        
+        return valor_de_notas_depuradas
+    
+    ## FUNCION PARA APROXIMAR LAS NOTAS DEPURADAS A NOTAS REALES SEGUN LA ESCALA MUSICAL DE LA GUITARRA
+    def tercera_depuracion(valor_de_notas_depuradas):
+    
+        valor_definitivo_notas = []
+        i=0
+        diferencia_uno=0
+        diferencia_dos=-1
+        #print (valor_de_notas_depuradas)
+        # NOTA: el 3157894791 es un error por encima o por debajo de la escala
+        while (i < len(valor_de_notas_depuradas)):
+            
+            j=0
+            bandera= True
+            if (valor_de_notas_depuradas[i]<process.escala[j]): ## si se sale de la escala le asigno un valor muy grande
+                valor_definitivo_notas.append(3157894791)
+                j=1
+                
+            while(j< len(process.escala)and(bandera)):        
+
+                if ( process.escala[j] <= valor_de_notas_depuradas[i]):
+                    j+=1
+                else:
+                    bandera=False    
+            
+            
+            if bandera: ## condicion por si la nota sobrepasa la escala
+                valor_definitivo_notas.append(3157894791)
+            else:
+                
+                diferencia_uno= abs (valor_de_notas_depuradas[i]-process.escala[j-1])
+                diferencia_dos= abs (process.escala[j]-valor_de_notas_depuradas[i])
+
+                if (diferencia_uno<diferencia_dos): ## condicion para mirar que valor de la escala se ajusta mas
+                    valor_definitivo_notas.append(process.escala[j-1])
+                else : 
+                    valor_definitivo_notas.append(process.escala[j]) 
+            
+            i+=1
+        return valor_definitivo_notas
+
     def riff_a_procesar(list_riff):
         riff_visibles = []
         for riff in list_riff:
             if riff['visible'] and riff ['texto'] != 'procesando':
                 riff_visibles.append(riff['texto'])
+        
+        return riff_visibles
 
-        #for nombre in riff_visibles:
-        process.f_audio('')
-
-    def main(list_riff):
+    def controlador(riff):
         p = process
-        #print (p.riff_a_procesar(list_riff))
-        Audio,Archivo = p.f_audio(list_riff)
-        p.f_beats_for_minutes(Audio)        
+        
+        Audio,Archivo = p.f_audio(riff)
+        # p.f_beats_for_minutes(Audio)        
         
         ## primera_depuracion(tiempos_detectados_essentia,all_times,all_notes)
         t_notas_detectadas = p.f_essentia_extract(Audio)
+        #print ('t_notas_detectadas ', t_notas_detectadas)
         all_extractor = p.f_extractor_times_and_notes(Audio,Archivo)
 
-        # d_prome_ind = {'promedio_notas':promedio_notas,'notas_segun_indice':notas_segun_indice} 
+        # comentario -> d_prome_ind = {'promedio_notas':promedio_notas,'notas_segun_indice':notas_segun_indice} 
         d_prome_ind =  p.primera_depuracion(t_notas_detectadas,all_extractor)
 
-        p.segunda_depuracion(d_prome_ind['promedio_notas'],d_prome_ind['notas_segun_indice'],t_notas_detectadas)
+        valor_de_notas_depuradas = p.segunda_depuracion(d_prome_ind['promedio_notas'],d_prome_ind['notas_segun_indice'],t_notas_detectadas)
+        return  (tab().main(p.tercera_depuracion(valor_de_notas_depuradas)))
+        #print(p.tercera_depuracion(valor_de_notas_depuradas))
+    
+    def main(list_of_dicc_riff):
+        riff_procesar = process.riff_a_procesar(list_of_dicc_riff)
+        diic_de_respuesta=[]
+        for nombre in riff_procesar:
+            #print ("NOMBRE ->> ", nombre)
+            diic_de_respuesta.append({
+                'Riff': nombre,
+                'Respuesta':process.controlador(nombre+'.wav'),
+                'Duracion': 10,
+                'BPM':100 }
+                )
+        return diic_de_respuesta
 
-        return True
 
-process.main('monos_ebrios.wav')
+"""print ("TERMINO EXITOSAMENTE", process.main([{
+                "visible" : True,
+                'texto'   : "Riff_Uno"               
+
+            },
+            {
+                "visible" : False,
+                'texto'   : "Riff_Dos"
+            },
+            {
+                "visible" : True,
+                'texto'   : "monos_ebrios"
+       }]))
+"""
