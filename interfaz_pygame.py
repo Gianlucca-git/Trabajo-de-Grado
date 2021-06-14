@@ -4,13 +4,14 @@ import pyaudio
 import wave
 from pygame.locals import *
 import threading
+from multiprocessing.pool import ThreadPool
 from generar import process
 ## graficar ___
 import matplotlib.backends.backend_agg as agg
 import scipy.io.wavfile
 import numpy as np
 import pylab
-
+import queue
 
 import time
 
@@ -280,7 +281,7 @@ class interfaz():
 
         self.dicc_riff = {
             "riff_1": {
-                "visible" : False,
+                "visible" : True,
                 "texto"   : "Riff_Uno",
                 "objeto"  : riff_1,
                 "area"    : (95, 175)
@@ -349,7 +350,11 @@ class interfaz():
         self.list_riff = [self.dicc_riff['riff_1'], self.dicc_riff['riff_2'], self.dicc_riff['riff_3'], self.dicc_riff['riff_4'],
                           self.dicc_riff['riff_5'], self.dicc_riff['riff_6'], self.dicc_riff['riff_7'], self.dicc_riff['riff_8'], self.dicc_riff['riff_9'], self.dicc_riff['riff_10'], self.dicc_riff['procesando']]
 
-        self.hilo1 = threading.Thread(target=process.main , args=(self.list_riff,))
+        #self.hilo1 = threading.Thread(target=process.main , args=(self.list_riff,))
+        self.que = queue.Queue()
+        self.t = threading.Thread(target=lambda q, arg1: q.put(process.main(arg1)), args=(self.que, self.list_riff))
+
+        self.return_val = []
 
         self.controlador_gui(True)  ## debe de ir de ultimo...
 
@@ -546,11 +551,12 @@ class interfaz():
                             self.dicc_iconos['grabar']['visible'] = False
                             self.dicc_boton['generar']['visible'] = False
                             self.dicc_riff['procesando']['visible']= True 
-                            bandera_procesar = True
+                            bandera_procesar = True                            
+
                             
-
-                            self.hilo1.start()
-
+                            self.t.start()
+                            self.t.join()
+                            self.return_val = self.que.get()
 
                     # Area de Iconoass Basura (eliminar)
                     indice=0
@@ -579,7 +585,8 @@ class interfaz():
                         indice+=1
             
             
-            self.dibujar(self.list_iconos_cargar)         
+            self.dibujar(self.list_iconos_cargar) 
+            #self.return_val = self.que.get()
             pygame.display.update()
 
     def funcion_grabar_parar(self, riff_numero):      
