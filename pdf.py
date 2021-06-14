@@ -55,7 +55,6 @@ class armar_pdf():
             A=''
             E=''
             Error=''
-            print("NUMERO " , numero)
 
             j=0
             while j< numero:  ## while para concatenar los ultimos 
