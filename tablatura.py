@@ -1,4 +1,4 @@
-class tab():
+class tab:
 
     def __init__(self):
         super().__init__()
@@ -44,7 +44,7 @@ class tab():
              
             limite_diapason = 9
             bandera =False
-            añadio = True
+            add = True
             self.notas_buscadas = notas_buscadas
             nota= notas[0] ## tomamos la primera nota para empezar a buscar donde poncharla en la tab
             if nota<= 987.77 and nota>=82.41 : ## si la nota esta en el diapason
@@ -63,13 +63,13 @@ class tab():
                         if nota == self.cuerdas[cuerda][i]:
                             self.tablatura.append([cuerda , str(i)])
                             bandera = True
-                            añadio  = True
+                            add  = True
                             break
                         elif  cuerda == 'primera':
                             limite_diapason=19    
                         
                         else: 
-                            añadio = False
+                            add = False
                         i+=1
 
                     if bandera: ## condicion para terminar de buscar
@@ -78,7 +78,7 @@ class tab():
             else:
                 self.tablatura.append(['error' , 'X'])
                 self.primera_nota(notas[1:],notas_buscadas +1) 
-            if not añadio : 
+            if not add : 
                 self.tablatura.append(['error' , 'X'])
                 self.primera_nota(notas[1:],notas_buscadas +1)
             

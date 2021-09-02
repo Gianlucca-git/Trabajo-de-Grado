@@ -22,7 +22,7 @@ class process ():
     def f_audio (riff):
         Archivo = 'grabaciones/' + riff
         Audio = MonoLoader(filename=Archivo)()
-        print ('CARGO EL ARCHIVO.WAV') 
+        #print ('CARGO EL ARCHIVO.WAV') 
         return Audio,Archivo
 
     def f_beats_for_minutes(Audio):
@@ -36,7 +36,7 @@ class process ():
         #print("beats Detectados ->", len(beats) )##picos de grafica 
         #print("Beat positions (sec.):", beats)
         #print("Beat estimation confidence:", b_conf)
-        return bpm,  len(beats) 
+        return bpm 
         
     def f_extractor_times_and_notes(Audio,Archivo):
 
@@ -49,7 +49,7 @@ class process ():
 
         # Pitch is estimated on frames. Compute frame time positions
         all_times = np.linspace(0.0,len(Audio)/44100.0,len(all_notes) )
-        return {'all_times':all_times,'all_notes':all_notes}
+        return {'all_times':all_times,'all_notes':all_notes, 'Duracion': duracion}
         #print (len (all_times),"nada",len (all_notes))
 
 ## funcion auxiliar para truncar a 7 decimales sin perder o modificar datos relevantes
@@ -160,9 +160,9 @@ class process ():
         fuza= 1/8 
         semi_fuza = 1/16
 
-        print('promedio_notas', len(promedio_notas))
-        print('notas_segun_indice', len(notas_segun_indice))
-        print('t_notas_detectadas', len(t_notas_detectadas))
+        #print('promedio_notas', len(promedio_notas))
+        #print('notas_segun_indice', len(notas_segun_indice))
+        #print('t_notas_detectadas', len(t_notas_detectadas))
 
         t_notas_detectadas_depuradas = []
         i,diferencia = 0 , 0  
@@ -207,7 +207,7 @@ class process ():
                 
             i+=1    
         else: 
-            print (" PUTO VALOR DE i ->" , i )
+            #print (" PUTO VALOR DE i ->" , i )
 
             t_notas_detectadas_depuradas.append(t_notas_detectadas[i-1])    
             
@@ -277,7 +277,7 @@ class process ():
         d_prome_ind =  p.primera_depuracion(t_notas_detectadas,all_extractor)
 
         valor_de_notas_depuradas = p.segunda_depuracion(d_prome_ind['promedio_notas'],d_prome_ind['notas_segun_indice'],t_notas_detectadas)
-        return  (tab().main(p.tercera_depuracion(valor_de_notas_depuradas)))
+        return  { 'Respuesta': (tab().main(p.tercera_depuracion(valor_de_notas_depuradas))), 'Duracion': all_extractor['Duracion'] , 'BPM':p.f_beats_for_minutes(Audio) }
         #print(p.tercera_depuracion(valor_de_notas_depuradas))
     
     def main(list_of_dicc_riff):
@@ -285,16 +285,18 @@ class process ():
         diic_de_respuesta=[]
         for nombre in riff_procesar:
             #print ("NOMBRE ->> ", nombre)
+            d = process.controlador(nombre+'.wav')
             diic_de_respuesta.append({
                 'Riff': nombre,
-                'Respuesta':process.controlador(nombre+'.wav'),
-                'Duracion': 10,
-                'BPM':100 }
+                'Respuesta': d['Respuesta'],
+                'Duracion': d['Duracion'] ,
+                'BPM': d['BPM'] }
                 )
         return diic_de_respuesta
 
 
-"""print ("TERMINO EXITOSAMENTE", process.main([{
+"""
+print ("TERMINO EXITOSAMENTE", process.main([{
                 "visible" : True,
                 'texto'   : "Riff_Uno"               
 
