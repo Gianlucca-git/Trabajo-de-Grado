@@ -55,15 +55,24 @@ class process ():
 ## funcion auxiliar para truncar a 7 decimales sin perder o modificar datos relevantes
     def trunque (valores, pitch_times ):    
         largo= len(valores)
+        #print("largo",largo)
         i=0
         for v in pitch_times:
             a=str(v)
+            #print("str 1",a )
             a=a[:largo]
-            if (a==valores):
+            #print("str 2",a )
+            #if i == 0:
+            #    print("str 2",a )
+            #    print ( " float", float(a))
+                #break
+            
+            if (float(a)>= float(valores)):
+
                 return i            
             i+=1
             #print(valores)        
-        return "error"     
+        return 0    
 
     def f_essentia_extract(Audio):
         ##    METODOS DE LIBRERIA QUE DETECTAN DONDE OCURRE CADA NOTA RESPECTO AL TIEMPO   
@@ -95,16 +104,44 @@ class process ():
         promedio_notas=[]
         i= 0
         u= all_extractor['all_notes'][-1]
+
+        #all_extractor['all_notes'] =  numpy.array (all_extractor['all_notes'].tolist())
+
         all_extractor['all_notes'] = numpy.append(all_extractor['all_notes'],[u,u,u,u,u,u,u,u,u,u,u,u])
         #print ("tiempos en segundos en los que ocurren las notas detectadas por libreria")
         #print()
         #print (tiempos_detectados_essentia)
         #print ("\n notas detectadas por libreria ->",len (tiempos_detectados_essentia))
 
+        #print ("\n\n ENTRE AQUI \n\n")
+        #print (" TAMAÑO DE TIEMPOS ", len(tiempos_detectados_essentia))
+        #print (" TAMAÑO DE mierda ", len(all_extractor['all_notes']))
+       
+        #print (" mierda 1 ", all_extractor['all_notes'][1] )
+        #print (" mierda 2 ", all_extractor['all_notes'][1680] )
+
+        #print (" mierda 3 ", all_extractor['all_notes'][0] )
+
+
+
+        #for value in all_extractor['all_notes']:
+        #    print ( " TAMAÑO DE ESTA MIERDA ", value )
+
+
         while ( i < len(tiempos_detectados_essentia) ):
             
+            #print ("\n i ", i )
+
+
             corte= str(tiempos_detectados_essentia[i]) ## definimos para cortar el string 
+            #print (" corte", corte )
+            #print (" corte", corte[:len(corte)-1] )
             indice_tiempos.append(process.trunque (corte[:len(corte)-1], all_extractor['all_times']) )
+
+            #print ("\n i 2 ", i )
+
+            #print ("\n i ", indice_tiempos )
+
             valor_de_la_nota= all_extractor['all_notes'][indice_tiempos[i]]
             notas_segun_indice.append(valor_de_la_nota)
             
