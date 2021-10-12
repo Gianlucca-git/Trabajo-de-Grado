@@ -20,7 +20,7 @@ class PDF(FPDF):
         # Position at 1.5 cm from bottom
         self.set_y(-15)
         # Arial italic 8
-        self.set_font('Arial', 'I', 8)
+        self.set_font('Arial', 'I', 15)
         # Page number
         self.cell(0, 10, 'Page ' + str(self.page_no()) + '/{nb}', 0, 0, 'C')
 
@@ -31,51 +31,51 @@ class armar_pdf():
         pdf = PDF()
         pdf.alias_nb_pages()
         pdf.add_page()
-        pdf.set_font('Times', '', 12)
+        pdf.set_font('Courier', '', 8)
         for dicc in list_diccionario:
 
             pdf.cell(0, 10, ' Nombre: ' + dicc['Riff'] + '.               Duración: ' + str(
                 dicc['Duracion']) + ' seg.               BPM :' + str(dicc['BPM']), 0, 1)
             i = 0
             while i < (len(dicc['Respuesta'][0]) - 10):
-                pdf.cell(0, 5, 'e         || ----- ' + str(dicc['Respuesta'][0][i]) + ' ----- ' + str(
+                pdf.cell(0, 5, 'e     || ----- ' + str(dicc['Respuesta'][0][i]) + ' ----- ' + str(
                     dicc['Respuesta'][0][i + 1]) + ' ----- ' + str(dicc['Respuesta'][0][i + 2]) + ' ----- ' + str(
                     dicc['Respuesta'][0][i + 3]) + ' ----- ' + str(dicc['Respuesta'][0][i + 4]) + ' ----- ' + str(
                     dicc['Respuesta'][0][i + 5]) + ' ----- ' + str(dicc['Respuesta'][0][i + 6]) + ' ----- ' + str(
                     dicc['Respuesta'][0][i + 7]) + ' ----- ' + str(dicc['Respuesta'][0][i + 8]) + ' ----- ' + str(
                     dicc['Respuesta'][0][i + 9]) + ' ----- | ', 0, 1)
-                pdf.cell(0, 5, 'B        || ----- ' + str(dicc['Respuesta'][1][i]) + ' ----- ' + str(
+                pdf.cell(0, 5, 'B     || ----- ' + str(dicc['Respuesta'][1][i]) + ' ----- ' + str(
                     dicc['Respuesta'][1][i + 1]) + ' ----- ' + str(dicc['Respuesta'][1][i + 2]) + ' ----- ' + str(
                     dicc['Respuesta'][1][i + 3]) + ' ----- ' + str(dicc['Respuesta'][1][i + 4]) + ' ----- ' + str(
                     dicc['Respuesta'][1][i + 5]) + ' ----- ' + str(dicc['Respuesta'][1][i + 6]) + ' ----- ' + str(
                     dicc['Respuesta'][1][i + 7]) + ' ----- ' + str(dicc['Respuesta'][1][i + 8]) + ' ----- ' + str(
                     dicc['Respuesta'][1][i + 9]) + ' ----- | ', 0, 1)
-                pdf.cell(0, 5, 'G        || ----- ' + str(dicc['Respuesta'][2][i]) + ' ----- ' + str(
+                pdf.cell(0, 5, 'G     || ----- ' + str(dicc['Respuesta'][2][i]) + ' ----- ' + str(
                     dicc['Respuesta'][2][i + 1]) + ' ----- ' + str(dicc['Respuesta'][2][i + 2]) + ' ----- ' + str(
                     dicc['Respuesta'][2][i + 3]) + ' ----- ' + str(dicc['Respuesta'][2][i + 4]) + ' ----- ' + str(
                     dicc['Respuesta'][2][i + 5]) + ' ----- ' + str(dicc['Respuesta'][2][i + 6]) + ' ----- ' + str(
                     dicc['Respuesta'][2][i + 7]) + ' ----- ' + str(dicc['Respuesta'][2][i + 8]) + ' ----- ' + str(
                     dicc['Respuesta'][2][i + 9]) + ' ----- | ', 0, 1)
-                pdf.cell(0, 5, 'D        || ----- ' + str(dicc['Respuesta'][3][i]) + ' ----- ' + str(
+                pdf.cell(0, 5, 'D     || ----- ' + str(dicc['Respuesta'][3][i]) + ' ----- ' + str(
                     dicc['Respuesta'][3][i + 1]) + ' ----- ' + str(dicc['Respuesta'][3][i + 2]) + ' ----- ' + str(
                     dicc['Respuesta'][3][i + 3]) + ' ----- ' + str(dicc['Respuesta'][3][i + 4]) + ' ----- ' + str(
                     dicc['Respuesta'][3][i + 5]) + ' ----- ' + str(dicc['Respuesta'][3][i + 6]) + ' ----- ' + str(
                     dicc['Respuesta'][3][i + 7]) + ' ----- ' + str(dicc['Respuesta'][3][i + 8]) + ' ----- ' + str(
                     dicc['Respuesta'][3][i + 9]) + ' ----- | ', 0, 1)
-                pdf.cell(0, 5, 'A        || ----- ' + str(dicc['Respuesta'][4][i]) + ' ----- ' + str(
+                pdf.cell(0, 5, 'A     || ----- ' + str(dicc['Respuesta'][4][i]) + ' ----- ' + str(
                     dicc['Respuesta'][4][i + 1]) + ' ----- ' + str(dicc['Respuesta'][4][i + 2]) + ' ----- ' + str(
                     dicc['Respuesta'][4][i + 3]) + ' ----- ' + str(dicc['Respuesta'][4][i + 4]) + ' ----- ' + str(
                     dicc['Respuesta'][4][i + 5]) + ' ----- ' + str(dicc['Respuesta'][4][i + 6]) + ' ----- ' + str(
                     dicc['Respuesta'][4][i + 7]) + ' ----- ' + str(dicc['Respuesta'][4][i + 8]) + ' ----- ' + str(
                     dicc['Respuesta'][4][i + 9]) + ' ----- | ', 0, 1)
-                pdf.cell(0, 8, 'E        || ----- ' + str(dicc['Respuesta'][5][i]) + ' ----- ' + str(
+                pdf.cell(0, 8, 'E     || ----- ' + str(dicc['Respuesta'][5][i]) + ' ----- ' + str(
                     dicc['Respuesta'][5][i + 1]) + ' ----- ' + str(dicc['Respuesta'][5][i + 2]) + ' ----- ' + str(
                     dicc['Respuesta'][5][i + 3]) + ' ----- ' + str(dicc['Respuesta'][5][i + 4]) + ' ----- ' + str(
                     dicc['Respuesta'][5][i + 5]) + ' ----- ' + str(dicc['Respuesta'][5][i + 6]) + ' ----- ' + str(
                     dicc['Respuesta'][5][i + 7]) + ' ----- ' + str(dicc['Respuesta'][5][i + 8]) + ' ----- ' + str(
                     dicc['Respuesta'][5][i + 9]) + ' ----- | ', 0, 1)
 
-                pdf.cell(0, 15, 'Error  || ----- ' + str(dicc['Respuesta'][6][i]) + ' ----- ' + str(
+                pdf.cell(0, 15, 'Error || ----- ' + str(dicc['Respuesta'][6][i]) + ' ----- ' + str(
                     dicc['Respuesta'][6][i + 1]) + ' ----- ' + str(dicc['Respuesta'][6][i + 2]) + ' ----- ' + str(
                     dicc['Respuesta'][6][i + 3]) + ' ----- ' + str(dicc['Respuesta'][6][i + 4]) + ' ----- ' + str(
                     dicc['Respuesta'][6][i + 5]) + ' ----- ' + str(dicc['Respuesta'][6][i + 6]) + ' ----- ' + str(
